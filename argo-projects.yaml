@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: argocd
+  name: proj-a
+  namespace: argocd
+spec:
+  destinations:
+  - namespace: guestbook
+    server: https://kubernetes.default.svc
+  orphanedResources:
+    warn: false
+  permitOnlyProjectScopedClusters: false
+  roles:
+  - description: Alice role
+    groups:
+    - alice
+    name: alice-role
+    policies:
+    - p, proj:proj-a:alice-role, applications, *, proj-a/*, allow
+    - p, proj:proj-a:alice-role, repositories, *, proj-a/*, allow
+  sourceRepos:
+  - '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: argocd
+  name: proj-b
+  namespace: argocd
+spec:
+  destinations:
+  - namespace: guestbook
+    server: https://kubernetes.default.svc
+  orphanedResources:
+    warn: false
+  permitOnlyProjectScopedClusters: false
+  roles:
+  - description: Alice role
+    groups:
+    - alice
+    name: alice-role
+    policies:
+    - p, proj:proj-b:alice-role, applications, *, proj-b/*, allow
+    - p, proj:proj-b:alice-role, repositories, *, proj-b/*, allow
+  sourceRepos:
+  - '*'
